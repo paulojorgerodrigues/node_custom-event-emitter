@@ -1,7 +1,7 @@
 'use strict';
 
 class MyEventEmitter {
-  static events = [];
+  events = [];
 
   constructor() {
     MyEventEmitter.events = [];
@@ -50,32 +50,39 @@ class MyEventEmitter {
 
     eventInfo.eventListners.push(callback);
   }
+
   off(eventName, listener) {
     const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
-    const newListeners = eventInfo.eventListners.filter((v, i, a) => {
-      return v.listener !== listener;
-    });
+    if (eventInfo) {
+      const newListeners = eventInfo.eventListners.filter((v, i, a) => {
+        return v.listener !== listener;
+      });
 
-    eventInfo.eventListners = newListeners;
+      eventInfo.eventListners = newListeners;
+    }
   }
+
   emit(eventName, ...params) {
     const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
-    for (let i = 0; i < eventInfo.eventListners.length; i++) {
-      eventInfo.eventListners[i].listener(...params);
+    if (eventInfo) {
+      for (let i = 0; i < eventInfo.eventListners.length; i++) {
+        eventInfo.eventListners[i].listener(...params);
+      }
+
+      const newListeners = eventInfo.eventListners.filter((v, i, a) => {
+        return v.once === false;
+      });
+
+      eventInfo.eventListners = newListeners;
     }
-
-    const newListeners = eventInfo.eventListners.filter((v, i, a) => {
-      return v.once === false;
-    });
-
-    eventInfo.eventListners = newListeners;
   }
+
   prependListener(eventName, listener) {
     let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
@@ -119,10 +126,11 @@ class MyEventEmitter {
 
     eventInfo.eventListners.unshift(callback);
   }
+
   removeAllListeners(eventName = '') {
     if (eventName === '') {
       for (let i = 0; i < MyEventEmitter.events.length; i++) {
-        MyEventEmitter.events.eventListners.length = 0;
+        MyEventEmitter.events[i].eventListners.length = 0;
       }
     } else {
       const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
@@ -134,6 +142,7 @@ class MyEventEmitter {
       }
     }
   }
+
   listenerCount(eventName) {
     const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
