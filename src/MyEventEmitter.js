@@ -4,11 +4,11 @@ class MyEventEmitter {
   events = [];
 
   constructor() {
-    MyEventEmitter.events = [];
+    this.events = [];
   }
 
   on(eventName, listener) {
-    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    let eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
@@ -18,7 +18,7 @@ class MyEventEmitter {
         eventListners: [],
       };
 
-      MyEventEmitter.events.push(eventInfo);
+      this.events.push(eventInfo);
     }
 
     const callback = {
@@ -30,7 +30,7 @@ class MyEventEmitter {
   }
 
   once(eventName, listener) {
-    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    let eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
@@ -40,7 +40,7 @@ class MyEventEmitter {
         eventListners: [],
       };
 
-      MyEventEmitter.events.push(eventInfo);
+      this.events.push(eventInfo);
     }
 
     const callback = {
@@ -52,7 +52,7 @@ class MyEventEmitter {
   }
 
   off(eventName, listener) {
-    const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    const eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
@@ -66,7 +66,7 @@ class MyEventEmitter {
   }
 
   emit(eventName, ...params) {
-    const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    const eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
@@ -84,7 +84,7 @@ class MyEventEmitter {
   }
 
   prependListener(eventName, listener) {
-    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    let eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
@@ -94,7 +94,7 @@ class MyEventEmitter {
         eventListners: [],
       };
 
-      MyEventEmitter.events.push(eventInfo);
+      this.events.push(eventInfo);
     }
 
     const callback = {
@@ -106,7 +106,7 @@ class MyEventEmitter {
   }
 
   prependOnceListener(eventName, listener) {
-    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    let eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
@@ -116,7 +116,7 @@ class MyEventEmitter {
         eventListners: [],
       };
 
-      MyEventEmitter.events.push(eventInfo);
+      this.events.push(eventInfo);
     }
 
     const callback = {
@@ -129,11 +129,11 @@ class MyEventEmitter {
 
   removeAllListeners(eventName = '') {
     if (eventName === '') {
-      for (let i = 0; i < MyEventEmitter.events.length; i++) {
-        MyEventEmitter.events[i].eventListners.length = 0;
+      for (let i = 0; i < this.events.length; i++) {
+        this.events[i].eventListners.length = 0;
       }
     } else {
-      const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      const eventInfo = this.events.find((value, indexed, arr) => {
         return value.eventName === eventName;
       });
 
@@ -144,7 +144,7 @@ class MyEventEmitter {
   }
 
   listenerCount(eventName) {
-    const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+    const eventInfo = this.events.find((value, indexed, arr) => {
       return value.eventName === eventName;
     });
 
