@@ -1,14 +1,150 @@
 'use strict';
 
 class MyEventEmitter {
-  on() {}
-  once() {}
-  off() {}
-  emit() {}
-  prependListener() {}
-  prependOnceListener() {}
-  removeAllListeners() {}
-  listenerCount() {}
+  static events = [];
+
+  constructor() {
+    MyEventEmitter.events = [];
+  }
+
+  on(eventName, listener) {
+    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    if (!eventInfo) {
+      eventInfo = {
+        eventName: eventName,
+        eventListners: [],
+      };
+
+      MyEventEmitter.events.push(eventInfo);
+    }
+
+    const callback = {
+      listener: listener,
+      once: false,
+    };
+
+    eventInfo.eventListners.push(callback);
+  }
+
+  once(eventName, listener) {
+    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    if (!eventInfo) {
+      eventInfo = {
+        eventName: eventName,
+        eventListners: [],
+      };
+
+      MyEventEmitter.events.push(eventInfo);
+    }
+
+    const callback = {
+      listener: listener,
+      once: true,
+    };
+
+    eventInfo.eventListners.push(callback);
+  }
+  off(eventName, listener) {
+    const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    const newListeners = eventInfo.eventListners.filter((v, i, a) => {
+      return v.listener !== listener;
+    });
+
+    eventInfo.eventListners = newListeners;
+  }
+  emit(eventName, ...params) {
+    const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    for (let i = 0; i < eventInfo.eventListners.length; i++) {
+      eventInfo.eventListners[i].listener(...params);
+    }
+
+    const newListeners = eventInfo.eventListners.filter((v, i, a) => {
+      return v.once === false;
+    });
+
+    eventInfo.eventListners = newListeners;
+  }
+  prependListener(eventName, listener) {
+    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    if (!eventInfo) {
+      eventInfo = {
+        eventName: eventName,
+        eventListners: [],
+      };
+
+      MyEventEmitter.events.push(eventInfo);
+    }
+
+    const callback = {
+      listener: listener,
+      once: false,
+    };
+
+    eventInfo.eventListners.unshift(callback);
+  }
+
+  prependOnceListener(eventName, listener) {
+    let eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    if (!eventInfo) {
+      eventInfo = {
+        eventName: eventName,
+        eventListners: [],
+      };
+
+      MyEventEmitter.events.push(eventInfo);
+    }
+
+    const callback = {
+      listener: listener,
+      once: true,
+    };
+
+    eventInfo.eventListners.unshift(callback);
+  }
+  removeAllListeners(eventName = '') {
+    if (eventName === '') {
+      for (let i = 0; i < MyEventEmitter.events.length; i++) {
+        MyEventEmitter.events.eventListners.length = 0;
+      }
+    } else {
+      const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+        return value.eventName === eventName;
+      });
+
+      if (eventInfo) {
+        eventInfo.eventListners.length = 0;
+      }
+    }
+  }
+  listenerCount(eventName) {
+    const eventInfo = MyEventEmitter.events.find((value, indexed, arr) => {
+      return value.eventName === eventName;
+    });
+
+    if (eventInfo) {
+      return eventInfo.eventListners.length;
+    }
+
+    return 0;
+  }
 }
 
 module.exports = MyEventEmitter;
